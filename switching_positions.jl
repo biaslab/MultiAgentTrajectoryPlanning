@@ -5,7 +5,7 @@ using Markdown
 using InteractiveUtils
 
 # ╔═╡ 248bf010-7d15-4886-82e5-7fbbd7e0f7ec
-using LinearAlgebra, RxInfer, Plots, PGFPlotsX, Colors
+using LinearAlgebra, RxInfer, Plots, PGFPlotsX
 
 # ╔═╡ 90ef24e0-1fd9-11ee-2ed4-e947901d2a4c
 md"""
@@ -51,11 +51,11 @@ end;
 begin
 	plot(size = (600*0.8, 600))
 
-	scatter!([goals[1,2][1]], [goals[1,2][3]], color="red", label="", marker=:star5, markersize=10)
+	scatter!([goals[2,1][1]], [goals[2,1][3]], color="red", label="", marker=:star5, markersize=10)
 	scatter!([goals[2,2][1]], [goals[2,2][3]], color="blue", label="", marker=:star5, markersize=10)
 
 	draw_circle!([goals[1,1][1], goals[1,1][3]], radius1; color="red", label="")
-	draw_circle!([goals[2,1][1], goals[2,1][3]], radius2; color="blue", label="")
+	draw_circle!([goals[1,2][1], goals[1,2][3]], radius2; color="blue", label="")
 
 	xlims!(-40, 40)
 	ylims!(-25, 75)
@@ -224,7 +224,7 @@ begin
 		draw_circle!(mean(results.posteriors[:y][2,t]), radius2; color="blue", label="")
 	
 	
-		scatter!([goals[1,2][1]], [goals[1,2][3]], color="red", label="", marker=:star5, markersize=10)
+		scatter!([goals[2,1][1]], [goals[2,1][3]], color="red", label="", marker=:star5, markersize=10)
 		scatter!([goals[2,2][1]], [goals[2,2][3]], color="blue", label="", marker=:star5, markersize=10)
 
 		xlims!(-40, 40)
@@ -267,21 +267,25 @@ begin
 			{},
 			Plot(
 				{
-					"only marks",
-					mark = "triangle*",
-					mark_size = 5,
 					"red",
+					"dashed",
+					line_width = 1.5
 				},
-				Table([goals[1,2][1]],[goals[1,2][3]])
+				Table(
+					map(x -> mean(x)[1], results.posteriors[:y][1,1:Int(round(1 + (nr_steps-1) * (k-1) / 9))]),
+					map(x -> mean(x)[2], results.posteriors[:y][1,1:Int(round(1 + (nr_steps-1) * (k-1) / 9))]),
+				)
 			),
 			Plot(
 				{
-					"only marks",
-					mark = "triangle*",
-					mark_size = 5,
 					"blue",
+					"dashed",
+					line_width = 1.5
 				},
-				Table([goals[2,2][1]],[goals[2,2][3]])
+				Table(
+					map(x -> mean(x)[1], results.posteriors[:y][2,1:Int(round(1 + (nr_steps-1) * (k-1) / 9))]),
+					map(x -> mean(x)[2], results.posteriors[:y][2,1:Int(round(1 + (nr_steps-1) * (k-1) / 9))]),
+				)
 			),
 			Plot(
 				{
@@ -302,6 +306,24 @@ begin
 					mean(results.posteriors[:y][2,Int(round(1 + (nr_steps-1) * (k-1) / 9))])[1] .+ radius2 .* cos.(θ),
 					mean(results.posteriors[:y][2,Int(round(1 + (nr_steps-1) * (k-1) / 9))])[2] .+ radius2 .* sin.(θ)
 				)
+			),
+			Plot(
+				{
+					"only marks",
+					mark = "triangle*",
+					mark_size = 5,
+					"red",
+				},
+				Table([goals[2,1][1]],[goals[2,1][3]])
+			),
+			Plot(
+				{
+					"only marks",
+					mark = "triangle*",
+					mark_size = 5,
+					"blue",
+				},
+				Table([goals[2,2][1]],[goals[2,2][3]])
 			)
 		)
 	end;
@@ -316,14 +338,12 @@ end
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
 [deps]
-Colors = "5ae59095-9a9b-59fe-a467-6f913c188581"
 LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
 PGFPlotsX = "8314cec4-20b6-5062-9cdb-752b83310925"
 Plots = "91a5bcdd-55d7-5caf-9e0b-520d859cae80"
 RxInfer = "86711068-29c9-4ff7-b620-ae75d7495b3d"
 
 [compat]
-Colors = "~0.12.10"
 PGFPlotsX = "~1.6.0"
 Plots = "~1.38.16"
 RxInfer = "~2.11.1"
@@ -335,7 +355,7 @@ PLUTO_MANIFEST_TOML_CONTENTS = """
 
 julia_version = "1.9.1"
 manifest_format = "2.0"
-project_hash = "062012e9fc6dfcdba4ccd81fa83dd430b1d469e3"
+project_hash = "8f6f78dde63858b73c7dc8010f52b14f1c5e0ae0"
 
 [[deps.Adapt]]
 deps = ["LinearAlgebra", "Requires"]
