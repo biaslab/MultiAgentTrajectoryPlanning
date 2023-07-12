@@ -271,7 +271,7 @@ begin
 		
 	end
 
-	gif(animation, "exports/crossroads.gif", fps = 5)
+	gif(animation, "exports/crossroads.gif", fps = 15)
 
 end
 
