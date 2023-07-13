@@ -4,8 +4,18 @@
 using Markdown
 using InteractiveUtils
 
+# This Pluto notebook uses @bind for interactivity. When running this notebook outside of Pluto, the following 'mock version' of @bind gives bound variables a default value (instead of an error).
+macro bind(def, element)
+    quote
+        local iv = try Base.loaded_modules[Base.PkgId(Base.UUID("6e696c72-6542-2067-7265-42206c756150"), "AbstractPlutoDingetjes")].Bonds.initial_value catch; b -> missing; end
+        local el = $(esc(element))
+        global $(esc(def)) = Core.applicable(Base.get, el) ? Base.get(el) : iv(el)
+        el
+    end
+end
+
 # ╔═╡ 248bf010-7d15-4886-82e5-7fbbd7e0f7ec
-using LinearAlgebra, RxInfer, Plots, PGFPlotsX, LogExpFunctions
+using LinearAlgebra, RxInfer, Plots, PGFPlotsX, LogExpFunctions, PlutoUI
 
 # ╔═╡ 90ef24e0-1fd9-11ee-2ed4-e947901d2a4c
 md"""
@@ -52,6 +62,9 @@ begin
 
 	push!(PGFPlotsX.CUSTOM_PREAMBLE, raw"\usetikzlibrary{patterns}");
 end;
+
+# ╔═╡ bacf9b04-84e8-44cc-bdaa-b8dc1628ff62
+md"Save figures $(@bind save_figures CheckBox(default=false))"
 
 # ╔═╡ f3b412ba-f0e6-4423-a44d-dcf04ad2b475
 md"""
@@ -277,51 +290,96 @@ md"""
 
 # ╔═╡ 9512a92b-32df-4d9b-8e02-870ade5ef1ba
 begin
-
-	animation = @animate for t in 1:nr_steps
-		plot(size = (0.8*600, 600), legend=false)
-
-		plot!(
-			map(x -> mean(x)[1], results.posteriors[:y][1,1:t]),
-			map(x -> mean(x)[2], results.posteriors[:y][1,1:t]);
-			color="red", linestyle=:dash
-		)
-		plot!(
-			map(x -> mean(x)[1], results.posteriors[:y][2,1:t]),
-			map(x -> mean(x)[2], results.posteriors[:y][2,1:t]);
-			color="blue", linestyle=:dash
-		)
-		plot!(
-			map(x -> mean(x)[1], results.posteriors[:y][3,1:t]),
-			map(x -> mean(x)[2], results.posteriors[:y][3,1:t]);
-			color="orange", linestyle=:dash
-		)
-		plot!(
-			map(x -> mean(x)[1], results.posteriors[:y][4,1:t]),
-			map(x -> mean(x)[2], results.posteriors[:y][4,1:t]);
-			color="green", linestyle=:dash
-		)
+	if save_figures
+		animation = @animate for t in 1:nr_steps
+			plot(size = (0.8*600, 600), legend=false)
 	
-		draw_circle!(mean(results.posteriors[:y][1,t]), radius; color="red", label="")
-		draw_circle!(mean(results.posteriors[:y][2,t]), radius; color="blue", label="")
-		draw_circle!(mean(results.posteriors[:y][3,t]), radius; color="orange", label="")
-		draw_circle!(mean(results.posteriors[:y][4,t]), radius; color="green", label="")
-
-		draw_rectangle!(environment[1]; label="", color="black", alpha=0.5)
-		draw_rectangle!(environment[2]; label="", color="black", alpha=0.5)
-	
-		scatter!([goals[2,1][1]], [goals[2,1][3]], color="red", label="", marker=:star5, markersize=10)
-		scatter!([goals[2,2][1]], [goals[2,2][3]], color="blue", label="", marker=:star5, markersize=10)
-		scatter!([goals[2,3][1]], [goals[2,3][3]], color="orange", label="", marker=:star5, markersize=10)
-		scatter!([goals[2,4][1]], [goals[2,4][3]], color="green", label="", marker=:star5, markersize=10)
+			plot!(
+				map(x -> mean(x)[1], results.posteriors[:y][1,1:t]),
+				map(x -> mean(x)[2], results.posteriors[:y][1,1:t]);
+				color="red", linestyle=:dash
+			)
+			plot!(
+				map(x -> mean(x)[1], results.posteriors[:y][2,1:t]),
+				map(x -> mean(x)[2], results.posteriors[:y][2,1:t]);
+				color="blue", linestyle=:dash
+			)
+			plot!(
+				map(x -> mean(x)[1], results.posteriors[:y][3,1:t]),
+				map(x -> mean(x)[2], results.posteriors[:y][3,1:t]);
+				color="orange", linestyle=:dash
+			)
+			plot!(
+				map(x -> mean(x)[1], results.posteriors[:y][4,1:t]),
+				map(x -> mean(x)[2], results.posteriors[:y][4,1:t]);
+				color="green", linestyle=:dash
+			)
 		
-		xlims!(-20, 20)
-		ylims!(-25, 25)
+			draw_circle!(mean(results.posteriors[:y][1,t]), radius; color="red", label="")
+			draw_circle!(mean(results.posteriors[:y][2,t]), radius; color="blue", label="")
+			draw_circle!(mean(results.posteriors[:y][3,t]), radius; color="orange", label="")
+			draw_circle!(mean(results.posteriors[:y][4,t]), radius; color="green", label="")
+	
+			draw_rectangle!(environment[1]; label="", color="black", alpha=0.5)
+			draw_rectangle!(environment[2]; label="", color="black", alpha=0.5)
+		
+			scatter!([goals[2,1][1]], [goals[2,1][3]], color="red", label="", marker=:star5, markersize=10)
+			scatter!([goals[2,2][1]], [goals[2,2][3]], color="blue", label="", marker=:star5, markersize=10)
+			scatter!([goals[2,3][1]], [goals[2,3][3]], color="orange", label="", marker=:star5, markersize=10)
+			scatter!([goals[2,4][1]], [goals[2,4][3]], color="green", label="", marker=:star5, markersize=10)
+			
+			xlims!(-20, 20)
+			ylims!(-25, 25)
+			
+		end
+		gif(animation, "exports/door.gif", fps = 15)
+
+	else
+
+		@gif for t in 1:nr_steps
+			plot(size = (0.8*600, 600), legend=false)
+	
+			plot!(
+				map(x -> mean(x)[1], results.posteriors[:y][1,1:t]),
+				map(x -> mean(x)[2], results.posteriors[:y][1,1:t]);
+				color="red", linestyle=:dash
+			)
+			plot!(
+				map(x -> mean(x)[1], results.posteriors[:y][2,1:t]),
+				map(x -> mean(x)[2], results.posteriors[:y][2,1:t]);
+				color="blue", linestyle=:dash
+			)
+			plot!(
+				map(x -> mean(x)[1], results.posteriors[:y][3,1:t]),
+				map(x -> mean(x)[2], results.posteriors[:y][3,1:t]);
+				color="orange", linestyle=:dash
+			)
+			plot!(
+				map(x -> mean(x)[1], results.posteriors[:y][4,1:t]),
+				map(x -> mean(x)[2], results.posteriors[:y][4,1:t]);
+				color="green", linestyle=:dash
+			)
+		
+			draw_circle!(mean(results.posteriors[:y][1,t]), radius; color="red", label="")
+			draw_circle!(mean(results.posteriors[:y][2,t]), radius; color="blue", label="")
+			draw_circle!(mean(results.posteriors[:y][3,t]), radius; color="orange", label="")
+			draw_circle!(mean(results.posteriors[:y][4,t]), radius; color="green", label="")
+	
+			draw_rectangle!(environment[1]; label="", color="black", alpha=0.5)
+			draw_rectangle!(environment[2]; label="", color="black", alpha=0.5)
+		
+			scatter!([goals[2,1][1]], [goals[2,1][3]], color="red", label="", marker=:star5, markersize=10)
+			scatter!([goals[2,2][1]], [goals[2,2][3]], color="blue", label="", marker=:star5, markersize=10)
+			scatter!([goals[2,3][1]], [goals[2,3][3]], color="orange", label="", marker=:star5, markersize=10)
+			scatter!([goals[2,4][1]], [goals[2,4][3]], color="green", label="", marker=:star5, markersize=10)
+			
+			xlims!(-20, 20)
+			ylims!(-25, 25)
+			
+		end
 		
 	end
-
-	gif(animation, "exports/door.gif", fps = 15)
-
+	
 end
 
 # ╔═╡ a7eebc8c-e3ec-4962-9088-af61b17af122
@@ -514,8 +572,10 @@ begin
 		)
 	end;
 
-	pgfsave("exports/door.pdf", fig)
-	pgfsave("exports/door.tikz", fig)
+	if save_figures
+		pgfsave("exports/door.pdf", fig)
+		pgfsave("exports/door.tikz", fig)
+	end
 	
 	fig
 
@@ -528,12 +588,14 @@ LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
 LogExpFunctions = "2ab3a3ac-af41-5b50-aa03-7779005ae688"
 PGFPlotsX = "8314cec4-20b6-5062-9cdb-752b83310925"
 Plots = "91a5bcdd-55d7-5caf-9e0b-520d859cae80"
+PlutoUI = "7f904dfe-b85e-4ff6-b463-dae2292396a8"
 RxInfer = "86711068-29c9-4ff7-b620-ae75d7495b3d"
 
 [compat]
 LogExpFunctions = "~0.3.24"
 PGFPlotsX = "~1.6.0"
 Plots = "~1.38.16"
+PlutoUI = "~0.7.51"
 RxInfer = "~2.11.1"
 """
 
@@ -543,7 +605,13 @@ PLUTO_MANIFEST_TOML_CONTENTS = """
 
 julia_version = "1.9.1"
 manifest_format = "2.0"
-project_hash = "927df3fdab2244f06dce9fd221a16cd4397cf6d2"
+project_hash = "991d5bf646c9d4f4c66050391af206eb114318fa"
+
+[[deps.AbstractPlutoDingetjes]]
+deps = ["Pkg"]
+git-tree-sha1 = "8eaf9f1b4921132a4cff3f36a1d9ba923b14a481"
+uuid = "6e696c72-6542-2067-7265-42206c756150"
+version = "1.1.4"
 
 [[deps.Adapt]]
 deps = ["LinearAlgebra", "Requires"]
@@ -1007,6 +1075,24 @@ git-tree-sha1 = "ce7ea9cc5db29563b1fe20196b6d23ab3b111384"
 uuid = "34004b35-14d8-5ef3-9330-4cdb6864b03a"
 version = "0.3.18"
 
+[[deps.Hyperscript]]
+deps = ["Test"]
+git-tree-sha1 = "8d511d5b81240fc8e6802386302675bdf47737b9"
+uuid = "47d2ed2b-36de-50cf-bf87-49c2cf4b8b91"
+version = "0.0.4"
+
+[[deps.HypertextLiteral]]
+deps = ["Tricks"]
+git-tree-sha1 = "c47c5fa4c5308f27ccaac35504858d8914e102f9"
+uuid = "ac1192a8-f4b3-4bfe-ba22-af5b92cd3ab2"
+version = "0.9.4"
+
+[[deps.IOCapture]]
+deps = ["Logging", "Random"]
+git-tree-sha1 = "d75853a0bdbfb1ac815478bacd89cd27b550ace6"
+uuid = "b5f81e59-6552-4d32-b1f0-c071b021bf89"
+version = "0.2.3"
+
 [[deps.IfElse]]
 git-tree-sha1 = "debdd00ffef04665ccbb3e150747a77560e8fad1"
 uuid = "615f187c-cbe4-4ef1-ba3b-2fcf58d6d173"
@@ -1231,6 +1317,11 @@ version = "0.12.163"
     ForwardDiff = "f6369f11-7733-5829-9624-2563aa707210"
     SpecialFunctions = "276daf66-3868-5448-9aa4-cd146d93841b"
 
+[[deps.MIMEs]]
+git-tree-sha1 = "65f28ad4b594aebe22157d6fac869786a255b7eb"
+uuid = "6c6e2e6c-3030-632d-7369-2d6c69616d65"
+version = "0.1.4"
+
 [[deps.MacroTools]]
 deps = ["Markdown", "Random"]
 git-tree-sha1 = "42324d08725e200c23d4dfb549e0d5d89dede2d2"
@@ -1442,6 +1533,12 @@ version = "1.38.16"
     IJulia = "7073ff75-c697-5162-941a-fcdaad2a7d2a"
     ImageInTerminal = "d8c32880-2388-543b-8c61-d9f865259254"
     Unitful = "1986cc42-f94f-5a68-af5c-568840ba703d"
+
+[[deps.PlutoUI]]
+deps = ["AbstractPlutoDingetjes", "Base64", "ColorTypes", "Dates", "FixedPointNumbers", "Hyperscript", "HypertextLiteral", "IOCapture", "InteractiveUtils", "JSON", "Logging", "MIMEs", "Markdown", "Random", "Reexport", "URIs", "UUIDs"]
+git-tree-sha1 = "b478a748be27bd2f2c73a7690da219d0844db305"
+uuid = "7f904dfe-b85e-4ff6-b463-dae2292396a8"
+version = "0.7.51"
 
 [[deps.PolyesterWeave]]
 deps = ["BitTwiddlingConvenienceFunctions", "CPUSummary", "IfElse", "Static", "ThreadingUtilities"]
@@ -1759,6 +1856,11 @@ git-tree-sha1 = "9a6ae7ed916312b41236fcef7e0af564ef934769"
 uuid = "3bb67fe8-82b1-5028-8e26-92a6c54297fa"
 version = "0.9.13"
 
+[[deps.Tricks]]
+git-tree-sha1 = "aadb748be58b492045b4f56166b5188aa63ce549"
+uuid = "410a4b4d-49e4-4fbc-ab6d-cb71b17b3775"
+version = "0.1.7"
+
 [[deps.TupleTools]]
 git-tree-sha1 = "3c712976c47707ff893cf6ba4354aa14db1d8938"
 uuid = "9d95972d-f1c8-5527-a6e0-b4b365fa01f6"
@@ -2059,6 +2161,7 @@ version = "1.4.1+0"
 # ╟─90ef24e0-1fd9-11ee-2ed4-e947901d2a4c
 # ╠═248bf010-7d15-4886-82e5-7fbbd7e0f7ec
 # ╟─5123688d-a83f-4e09-a0f1-e03a1f583264
+# ╟─bacf9b04-84e8-44cc-bdaa-b8dc1628ff62
 # ╟─f3b412ba-f0e6-4423-a44d-dcf04ad2b475
 # ╠═156d54ec-126b-4de1-a483-990b503c4a94
 # ╟─ef868b3a-0616-495e-9bd0-de2edf1089db
