@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.19.26
+# v0.19.27
 
 using Markdown
 using InteractiveUtils
@@ -65,6 +65,12 @@ end;
 
 # ╔═╡ bacf9b04-84e8-44cc-bdaa-b8dc1628ff62
 md"Save figures $(@bind save_figures CheckBox(default=false))"
+
+# ╔═╡ 8aafd494-661b-4368-993f-29c343c35d0a
+if save_figures
+	mkpath("exports")
+	nothing
+end
 
 # ╔═╡ f3b412ba-f0e6-4423-a44d-dcf04ad2b475
 md"""
@@ -603,7 +609,7 @@ RxInfer = "~2.11.1"
 PLUTO_MANIFEST_TOML_CONTENTS = """
 # This file is machine-generated - editing it directly is not advised
 
-julia_version = "1.9.1"
+julia_version = "1.9.2"
 manifest_format = "2.0"
 project_hash = "991d5bf646c9d4f4c66050391af206eb114318fa"
 
@@ -767,7 +773,7 @@ weakdeps = ["Dates", "LinearAlgebra"]
 [[deps.CompilerSupportLibraries_jll]]
 deps = ["Artifacts", "Libdl"]
 uuid = "e66e0078-7015-5450-92f7-15fbd957f2ae"
-version = "1.0.2+0"
+version = "1.0.5+0"
 
 [[deps.CompositeTypes]]
 git-tree-sha1 = "02d2316b7ffceff992f3096ae48c7829a8aa0638"
@@ -1500,7 +1506,7 @@ version = "0.42.2+0"
 [[deps.Pkg]]
 deps = ["Artifacts", "Dates", "Downloads", "FileWatching", "LibGit2", "Libdl", "Logging", "Markdown", "Printf", "REPL", "Random", "SHA", "Serialization", "TOML", "Tar", "UUIDs", "p7zip_jll"]
 uuid = "44cfe95a-1eb2-52ea-b672-e2afdf69b78f"
-version = "1.9.0"
+version = "1.9.2"
 
 [[deps.PlotThemes]]
 deps = ["PlotUtils", "Statistics"]
@@ -2162,6 +2168,7 @@ version = "1.4.1+0"
 # ╠═248bf010-7d15-4886-82e5-7fbbd7e0f7ec
 # ╟─5123688d-a83f-4e09-a0f1-e03a1f583264
 # ╟─bacf9b04-84e8-44cc-bdaa-b8dc1628ff62
+# ╟─8aafd494-661b-4368-993f-29c343c35d0a
 # ╟─f3b412ba-f0e6-4423-a44d-dcf04ad2b475
 # ╠═156d54ec-126b-4de1-a483-990b503c4a94
 # ╟─ef868b3a-0616-495e-9bd0-de2edf1089db
