@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.19.27
+# v0.19.26
 
 using Markdown
 using InteractiveUtils
@@ -181,7 +181,6 @@ md"""
 # ╔═╡ 1e2ba3eb-b073-40cc-8b56-633e18d041d9
 @constraints function switching_constraints() 
 	q(d, σ2) = q(d)q(σ2)
-	q(u) :: PointMass
 end;
 
 # ╔═╡ e6d347ee-835b-4077-968b-0e7b11540056

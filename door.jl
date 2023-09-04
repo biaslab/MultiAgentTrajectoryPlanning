@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.19.27
+# v0.19.26
 
 using Markdown
 using InteractiveUtils
@@ -249,7 +249,6 @@ md"""
 @constraints function door_constraints()
 	q(d, dσ2) = q(d)q(dσ2)
 	q(z, zσ2) = q(z)q(zσ2)
-	q(u) :: PointMass
 end;
 
 # ╔═╡ e6d347ee-835b-4077-968b-0e7b11540056
@@ -267,7 +266,7 @@ end;
 nr_steps = 50
 
 # ╔═╡ 5dba141f-a4ff-4439-91bc-c7d6d5a3f18e
-nr_iterations = 1000
+nr_iterations = 1500
 
 # ╔═╡ ead11ddb-2c4d-47a7-9cf5-483cb40598a0
 results = inference(
