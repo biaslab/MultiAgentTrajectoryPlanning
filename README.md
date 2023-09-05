@@ -1,4 +1,4 @@
-# Uncertainty-Aware Multi-Agent Trajectory Planning with NUV Priors
+# Multi-Agent Trajectory Planning with NUV Priors
 *By Bart van Erp, Dmitry Bagaev, Albert Podusenko Ismail Senoz and Bert de Vries*
 
 ---
