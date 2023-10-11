@@ -30,3 +30,7 @@ This repository contains all experiments of the paper.
 ```julia
 >> using Pluto; Pluto.run()
 ```
+
+# License
+
+[MIT License](LICENSE) Copyright (c) 2023 BIASlab
