@@ -1,0 +1,34 @@
+cff-version: 1.2.0
+message: "Please cite this research as below."
+authors:
+- family-names: "van Erp"
+  given-names: "Bart"
+  orcid: "https://orcid.org/0000-0002-5619-7071"
+- family-names: "Bagaev"
+  given-names: "Dmitry"
+- family-names: "Podusenko"
+  given-names: "Albert"
+- family-names: "Senoz"
+  given-names: "Ismail"
+- family-names: "de Vries"
+  given-names: "Bert"
+title: "Multi-Agent Trajectory Planning with NUV Priors"
+url: "https://github.com/biaslab/MultiAgentTrajectoryPlanning"
+preferred-citation:
+  type: conference
+  authors:
+  - family-names: "van Erp"
+    given-names: "Bart"
+    orcid: "https://orcid.org/0000-0002-5619-7071"
+  - family-names: "Bagaev"
+    given-names: "Dmitry"
+  - family-names: "Podusenko"
+    given-names: "Albert"
+  - family-names: "Senoz"
+    given-names: "Ismail"
+  - family-names: "de Vries"
+    given-names: "Bert"
+  conference:
+    name: "American Control Conference 2024"
+  type: generic
+  title: "Multi-Agent Trajectory Planning with NUV Priors"
