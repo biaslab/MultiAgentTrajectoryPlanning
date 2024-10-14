@@ -15,7 +15,6 @@ authors:
 title: "Multi-Agent Trajectory Planning with NUV Priors"
 url: "https://github.com/biaslab/MultiAgentTrajectoryPlanning"
 preferred-citation:
-  type: conference
   authors:
   - family-names: "van Erp"
     given-names: "Bart"
